@@ -13,8 +13,6 @@ class DurationText extends StatelessWidget {
     return Text(
       text,
       style: Theme.of(context).textTheme.headline6?.copyWith(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
             color: Colors.purple,
           ),
     );

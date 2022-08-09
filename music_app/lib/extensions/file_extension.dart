@@ -6,26 +6,24 @@ extension FileExtesion on FileSystemEntity {
   }
 
   String get secondPath {
-    String a = path.split('/').elementAt(2);
-    return a;
+    String secondSplit = path.split('/').elementAt(2);
+    return secondSplit;
   }
 
   String get mainStoragePath {
-    String a = path.split('/').elementAt(1);
-    String b = path.split('/').elementAt(2);
-    String c = path.split('/').elementAt(3);
-    return '/$a/$b/$c/';
+    String firstSplit = path.split('/').elementAt(1);
+    String secondSplit = path.split('/').elementAt(2);
+    String thirdSplit = path.split('/').elementAt(3);
+    return '/$firstSplit/$secondSplit/$thirdSplit/';
   }
 
   String get sdCardStoragePath {
-    String a = path.split('/').elementAt(1);
-    String b = path.split('/').elementAt(2);
-    return '/$a/$b/';
+    String firstSplit = path.split('/').elementAt(1);
+    String secondSplit = path.split('/').elementAt(2);
+    return '/$firstSplit/$secondSplit/';
   }
 
   String get nameWithoutType {
-    //abc.mp3
-    //0123456
     if (isMp3) {
       return nameWithType.replaceRange(nameWithType.length - 4, null, '');
     } else if (isM4a) {

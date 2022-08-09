@@ -27,13 +27,13 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
+    mainProvider = Provider.of<MainProvider>(context, listen: false);
+    audioProvider = Provider.of<AudioProvider>(context, listen: false);
     loadSongs();
     super.initState();
   }
 
   loadSongs() async {
-    mainProvider = Provider.of<MainProvider>(context, listen: false);
-    audioProvider = Provider.of<AudioProvider>(context, listen: false);
     await mainProvider.loadSongs();
     await audioProvider.setSongModelList(
       mainProvider.songModelList,

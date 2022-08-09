@@ -64,9 +64,6 @@ class _PlaylistOverviewPageState extends State<PlaylistOverviewPage> {
     Map playlist = mainGetterProvider.playlistList[widget.selectedIndex];
 
     return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      centerTitle: true,
       leading: IconButton(
           onPressed: () {
             mainSetterProvider.resetSelectedThings();
@@ -75,10 +72,6 @@ class _PlaylistOverviewPageState extends State<PlaylistOverviewPage> {
           icon: const Icon(Icons.arrow_back)),
       title: Text(
         title,
-        style: Theme.of(context)
-            .textTheme
-            .headline5
-            ?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
       ),
       actions: [
         Center(

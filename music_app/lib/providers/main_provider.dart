@@ -126,6 +126,13 @@ class MainProvider extends ChangeNotifier {
     }
   }
 
+  loadSongs() async {
+    await getAllPermissions();
+    await givePathForFunc();
+    loadingSongs = false;
+    notifyListeners();
+  }
+
   checkAllFiles(String path) {
     Directory directory = Directory(path);
 
@@ -193,13 +200,6 @@ class MainProvider extends ChangeNotifier {
     allPageList
         .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
 
-    notifyListeners();
-  }
-
-  loadSongs() async {
-    await getAllPermissions();
-    await givePathForFunc();
-    loadingSongs = false;
     notifyListeners();
   }
 

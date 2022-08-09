@@ -1,7 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:music_app/models/song_model.dart';
+import 'package:music_app/widgets/now_playing_page_buttons_row.dart';
 
 class AudioProvider extends ChangeNotifier {
   bool isPlaySound = false;
@@ -21,8 +21,7 @@ class AudioProvider extends ChangeNotifier {
 
   late int songDuration = 0;
 
-  //off, single, multi;
-  String releaseMode = 'off';
+  ReleaseSituation releaseMode = ReleaseSituation.off;
 
   bool shuffleMode = false;
 
@@ -32,10 +31,10 @@ class AudioProvider extends ChangeNotifier {
     audioPlayer.setVolume(0.5);
     audioPlayer.setPlaybackRate(1);
     audioPlayer.onPlayerComplete.listen((event) {
-      if (releaseMode == 'single') {
+      if (releaseMode == ReleaseSituation.single) {
         playSongWithPath(currentSong);
       } else if (getIndex(currentSong) == songModelList.length - 1) {
-        if (releaseMode == 'multi') {
+        if (releaseMode == ReleaseSituation.multi) {
           playSongWithPath(songModelList[0]);
         }
         stopSong();
@@ -87,14 +86,16 @@ class AudioProvider extends ChangeNotifier {
   }
 
   void changeReleaseMode() {
-    if (releaseMode == 'off') {
-      releaseMode = 'single';
-    } else if (releaseMode == 'single') {
-      releaseMode = 'multi';
-    } else {
-      releaseMode = 'off';
+    print(releaseMode.name + 'first');
+    if (releaseMode == ReleaseSituation.off) {
+      releaseMode = ReleaseSituation.single;
+    } else if (releaseMode == ReleaseSituation.single) {
+      releaseMode = ReleaseSituation.multi;
+    } else if (releaseMode == ReleaseSituation.multi) {
+      releaseMode = ReleaseSituation.off;
     }
     notifyListeners();
+    print(releaseMode.name + 'second');
   }
 
   Future<void> changeShuffleMode() async {

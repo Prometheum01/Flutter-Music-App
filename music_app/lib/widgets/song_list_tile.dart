@@ -137,7 +137,6 @@ class _SongListTileState extends State<SongListTile> {
     return Text(
       widget.allSongList[index].name,
       style: Theme.of(context).textTheme.headline6?.copyWith(
-          fontSize: 14,
           color: (audioGetterProvider.currentSong.path ==
                   widget.allSongList[index].path)
               ? Colors.purple
@@ -208,12 +207,8 @@ class _SelectableSongListTileState extends State<SelectableSongListTile> {
                     ),
                   ),
                 ),
-          subtitle: Text(
-            allSongList[index].album,
-            style: Theme.of(context).textTheme.subtitle2?.copyWith(
-                  color: Colors.black.withOpacity(0.5),
-                ),
-          ),
+          subtitle: Text(allSongList[index].album,
+              style: Theme.of(context).textTheme.subtitle2),
           title: listTileTitle(index, context),
         ),
       ),
@@ -223,10 +218,7 @@ class _SelectableSongListTileState extends State<SelectableSongListTile> {
   Text listTileTitle(int index, BuildContext context) {
     return Text(
       widget.list[index].name,
-      style: Theme.of(context)
-          .textTheme
-          .headline6
-          ?.copyWith(fontSize: 14, color: Colors.black),
+      style: Theme.of(context).textTheme.headline6,
       overflow: TextOverflow.ellipsis,
       softWrap: true,
     );

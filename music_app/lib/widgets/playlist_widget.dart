@@ -5,7 +5,7 @@ import 'package:music_app/providers/audio_player_provider.dart';
 import 'package:music_app/providers/main_provider.dart';
 import 'package:provider/provider.dart';
 
-class PlaylistWidget extends StatelessWidget {
+class PlaylistWidget extends StatefulWidget {
   const PlaylistWidget({
     Key? key,
     required this.index,
@@ -14,17 +14,26 @@ class PlaylistWidget extends StatelessWidget {
   final int index;
 
   @override
+  State<PlaylistWidget> createState() => _PlaylistWidgetState();
+}
+
+class _PlaylistWidgetState extends State<PlaylistWidget> {
+  late MainProvider mainSetterProvider;
+
+  @override
+  void initState() {
+    mainSetterProvider = Provider.of<MainProvider>(context, listen: false);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final audioGetterProvider = Provider.of<AudioProvider>(context);
     final mainGetterProvider = Provider.of<MainProvider>(context);
-    final mainSetterProvider =
-        Provider.of<MainProvider>(context, listen: false);
-    final audioSetterProvider =
-        Provider.of<AudioProvider>(context, listen: false);
 
-    String title = mainGetterProvider.playlistList[index]['title'];
+    String title = mainGetterProvider.playlistList[widget.index]['title'];
 
-    List<SongModel> songList = mainGetterProvider.playlistList[index]['list'];
+    List<SongModel> songList =
+        mainGetterProvider.playlistList[widget.index]['list'];
 
     return Material(
       color: Colors.transparent,
@@ -35,7 +44,7 @@ class PlaylistWidget extends StatelessWidget {
         onLongPress: () {
           if (!mainGetterProvider.selectedPlaylistMode) {
             mainSetterProvider.selectedPlaylist
-                .add(mainGetterProvider.playlistList[index]);
+                .add(mainGetterProvider.playlistList[widget.index]);
             mainSetterProvider.changeSelectedPlaylistMode();
           }
         },
@@ -43,14 +52,14 @@ class PlaylistWidget extends StatelessWidget {
           //Go Playlist overview page.
           if (mainGetterProvider.selectedPlaylistMode) {
             mainSetterProvider.selectPlaylistItem(
-              mainGetterProvider.playlistList[index],
+              mainGetterProvider.playlistList[widget.index],
             );
           } else {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    PlaylistOverviewPage(selectedIndex: index),
+                    PlaylistOverviewPage(selectedIndex: widget.index),
               ),
             );
           }
@@ -58,7 +67,7 @@ class PlaylistWidget extends StatelessWidget {
         child: Ink(
           decoration: BoxDecoration(
             color: mainGetterProvider.selectedPlaylist
-                    .contains(mainGetterProvider.playlistList[index])
+                    .contains(mainGetterProvider.playlistList[widget.index])
                 ? Colors.purple.withOpacity(0.15)
                 : Colors.transparent,
             borderRadius: const BorderRadius.all(
@@ -77,53 +86,11 @@ class PlaylistWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            child: Text(
-                              title,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: true,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6
-                                  ?.copyWith(fontSize: 18),
-                            ),
-                          ),
-                          Text('${songList.length} Song',
-                              style: Theme.of(context).textTheme.bodySmall),
-                        ],
-                      ),
+                      child: _PlaylistTitle(title: title, songList: songList),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          splashRadius: 16,
-                          onPressed: () {
-                            if (songList.isNotEmpty) {
-                              if ((audioGetterProvider.currentPlayList ==
-                                      title &&
-                                  audioGetterProvider.isPlaySound)) {
-                                audioSetterProvider.pauseSong();
-                              } else {
-                                audioSetterProvider.songModelList = songList;
-                                audioSetterProvider.changeSongModelList(
-                                    songList, title);
-                                audioSetterProvider.playSongWithPath(
-                                  audioGetterProvider.songModelList[0],
-                                );
-                              }
-                            }
-                          },
-                          icon: (audioGetterProvider.currentPlayList == title &&
-                                  audioGetterProvider.isPlaySound)
-                              ? const Icon(Icons.pause)
-                              : const Icon(Icons.play_arrow),
-                        ),
-                      ],
+                    _PlaylistPlayIcon(
+                      songList: songList,
+                      title: title,
                     ),
                   ],
                 ),
@@ -132,6 +99,77 @@ class PlaylistWidget extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _PlaylistPlayIcon extends StatelessWidget {
+  const _PlaylistPlayIcon({
+    Key? key,
+    required this.songList,
+    required this.title,
+  }) : super(key: key);
+
+  final List<SongModel> songList;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final audioGetterProvider = Provider.of<AudioProvider>(context);
+    final audioSetterProvider =
+        Provider.of<AudioProvider>(context, listen: false);
+    return IconButton(
+      splashRadius: 16,
+      onPressed: () {
+        if (songList.isNotEmpty) {
+          if ((audioGetterProvider.currentPlayList == title &&
+              audioGetterProvider.isPlaySound)) {
+            audioSetterProvider.pauseSong();
+          } else {
+            audioSetterProvider.songModelList = songList;
+            audioSetterProvider.changeSongModelList(songList, title);
+            audioSetterProvider.playSongWithPath(
+              audioGetterProvider.songModelList[0],
+            );
+          }
+        }
+      },
+      icon: (audioGetterProvider.currentPlayList == title &&
+              audioGetterProvider.isPlaySound)
+          ? const Icon(Icons.pause)
+          : const Icon(Icons.play_arrow),
+    );
+  }
+}
+
+class _PlaylistTitle extends StatelessWidget {
+  const _PlaylistTitle({
+    Key? key,
+    required this.title,
+    required this.songList,
+  }) : super(key: key);
+
+  final String title;
+  final List<SongModel> songList;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Text(
+            title,
+            overflow: TextOverflow.ellipsis,
+            softWrap: true,
+            style:
+                Theme.of(context).textTheme.headline5?.copyWith(fontSize: 16),
+          ),
+        ),
+        Text('${songList.length} Song',
+            style: Theme.of(context).textTheme.subtitle2),
+      ],
     );
   }
 }

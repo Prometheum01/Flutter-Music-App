@@ -42,19 +42,10 @@ class _AllSongsPageState extends State<AllSongsPage>
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<MainProvider>(context);
-    final audioGetterProvider =
-        Provider.of<AudioProvider>(context, listen: false);
-
     return Container(
       decoration: DecorationUtils.appBarDecoration,
       child: Scaffold(
-        bottomSheet: provider.selectedMode
-            ? SelectedBottomSheet(
-                songList: audioGetterProvider.allPageSongList,
-                secondItemType: 1,
-              )
-            : null,
+        bottomSheet: const AllSongPageBottomSheet(),
         appBar: _appBar(context),
         backgroundColor: Colors.transparent,
         body: Column(
@@ -69,19 +60,7 @@ class _AllSongsPageState extends State<AllSongsPage>
                 child: Container(
                   width: double.infinity,
                   decoration: DecorationUtils.allSongsPageWhiteDecoration,
-                  child: provider.loadingSongs
-                      ? const LoadingBar()
-                      : ListView.separated(
-                          separatorBuilder: (context, index) =>
-                              const CustomDividerForSongBuilder(),
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: audioGetterProvider.allPageSongList.length,
-                          itemBuilder: (context, index) => SongListTile(
-                            index: index,
-                            allSongList: audioGetterProvider.allPageSongList,
-                            title: 'all',
-                          ),
-                        ),
+                  child: const AllSongPageListView(),
                 ),
               ),
             ),
@@ -93,16 +72,59 @@ class _AllSongsPageState extends State<AllSongsPage>
 
   AppBar _appBar(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      centerTitle: true,
       title: Text(
         TextUtils.allSongsText.toUpperCase(),
-        style: Theme.of(context)
-            .textTheme
-            .headline5
-            ?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
       ),
     );
+  }
+}
+
+class AllSongPageListView extends StatelessWidget {
+  const AllSongPageListView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final mainGetterProvider = Provider.of<MainProvider>(
+      context,
+    );
+    final audioGetterProvider = Provider.of<AudioProvider>(
+      context,
+    );
+
+    return mainGetterProvider.loadingSongs
+        ? const LoadingBar()
+        : ListView.separated(
+            separatorBuilder: (context, index) =>
+                const CustomDividerForSongBuilder(),
+            physics: const BouncingScrollPhysics(),
+            itemCount: audioGetterProvider.allPageSongList.length,
+            itemBuilder: (context, index) => SongListTile(
+              index: index,
+              allSongList: audioGetterProvider.allPageSongList,
+              title: 'all',
+            ),
+          );
+  }
+}
+
+class AllSongPageBottomSheet extends StatelessWidget {
+  const AllSongPageBottomSheet({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final mainGetterProvider = Provider.of<MainProvider>(context);
+    final audioGetterProvider = Provider.of<AudioProvider>(
+      context,
+    );
+
+    return mainGetterProvider.selectedMode
+        ? SelectedBottomSheet(
+            songList: audioGetterProvider.allPageSongList,
+            secondItemType: 1,
+          )
+        : const SizedBox(
+            height: 0,
+            width: 0,
+          );
   }
 }

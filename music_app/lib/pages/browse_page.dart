@@ -58,9 +58,7 @@ class _BrowsePageState extends State<BrowsePage> {
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline5
-                                    ?.copyWith(
-                                        color: Colors.purple,
-                                        fontWeight: FontWeight.bold),
+                                    ?.copyWith(color: Colors.purple),
                               ),
                               ButtonWithMaterial(
                                 icon: const Icon(
@@ -108,15 +106,8 @@ class _BrowsePageState extends State<BrowsePage> {
 
   AppBar _appBar(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      centerTitle: true,
       title: Text(
         TextUtils.browseText.toUpperCase(),
-        style: Theme.of(context)
-            .textTheme
-            .headline5
-            ?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
       ),
     );
   }
@@ -176,13 +167,18 @@ class AddPlaylistAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(TextUtils.enterNewPlaylistName),
+      title: Center(
+        child: Text(
+          TextUtils.enterNewPlaylistName,
+          style: Theme.of(context).textTheme.headline6?.copyWith(fontSize: 22),
+        ),
+      ),
       content: Form(
         key: formKey,
         child: TextFormField(
           maxLength: 24,
           controller: titleController,
-          style: Theme.of(context).textTheme.headline6?.copyWith(fontSize: 16),
+          style: Theme.of(context).textTheme.headline6,
           decoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
               borderSide:

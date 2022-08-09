@@ -53,15 +53,8 @@ class _SelectSongPageState extends State<SelectSongPage> {
 
   AppBar _appBar(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      centerTitle: true,
       title: Text(
         TextUtils.addText,
-        style: Theme.of(context)
-            .textTheme
-            .headline5
-            ?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
       ),
       leading: IconButton(
         onPressed: () {
@@ -87,7 +80,6 @@ class _SelectSongPageState extends State<SelectSongPage> {
               mainSetterProvider.selectedList = [];
               mainSetterProvider.notifyListeners();
 
-              Navigator.pop(context);
               Navigator.pop(context);
             },
             icon: const Icon(

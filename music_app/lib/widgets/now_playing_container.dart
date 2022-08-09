@@ -29,46 +29,7 @@ class NowPlayingContainer extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  child: Text(
-                    audioGetterProvider.currentPlayList,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                    style: Theme.of(context).textTheme.headline6?.copyWith(
-                          fontSize: 16,
-                          color: Colors.black.withOpacity(0.25),
-                        ),
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  child: Text(
-                    song.name,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                    style: Theme.of(context).textTheme.headline6?.copyWith(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                  ),
-                ),
-                DurationText(
-                  text: '${TextUtils.changeDurationForm(
-                    Duration(seconds: audioGetterProvider.songDuration.toInt()),
-                  )} - ${TextUtils.changeDurationForm(
-                    Duration(
-                      seconds: audioGetterProvider.currentSong.duration ~/ 1000,
-                    ),
-                  )}',
-                ),
-              ],
-            ),
+            const _SongInfoColum(),
             Row(
               children: [
                 ButtonWithMaterial(
@@ -97,6 +58,49 @@ class NowPlayingContainer extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _SongInfoColum extends StatelessWidget {
+  const _SongInfoColum({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final audioGetterProvider = Provider.of<AudioProvider>(context);
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            audioGetterProvider.currentPlayList,
+            overflow: TextOverflow.ellipsis,
+            softWrap: true,
+            style: Theme.of(context).textTheme.subtitle2,
+          ),
+          Text(
+            audioGetterProvider.currentSong.name,
+            overflow: TextOverflow.ellipsis,
+            softWrap: true,
+            style: Theme.of(context)
+                .textTheme
+                .headline6
+                ?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          DurationText(
+            text: '${TextUtils.changeDurationForm(
+              Duration(seconds: audioGetterProvider.songDuration.toInt()),
+            )} - ${TextUtils.changeDurationForm(
+              Duration(
+                seconds: audioGetterProvider.currentSong.duration ~/ 1000,
+              ),
+            )}',
+          ),
+        ],
       ),
     );
   }

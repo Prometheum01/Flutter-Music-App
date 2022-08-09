@@ -18,7 +18,7 @@ class SongSlider extends StatelessWidget {
           .copyWith(thumbShape: SliderComponentShape.noThumb, trackHeight: 8),
       child: Slider(
         min: 0.0,
-        max: audioGetterProvider.currentSong.duration / 1000,
+        max: (audioGetterProvider.currentSong.duration / 1000),
         value: audioGetterProvider.songDuration.toDouble(),
         activeColor: Colors.purple,
         inactiveColor: Colors.purple.shade50,
